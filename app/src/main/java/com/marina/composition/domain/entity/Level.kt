@@ -1,7 +1,10 @@
 package com.marina.composition.domain.entity
 
-//неявно реализует Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-enum class Level {
+//неявно реализует Serializable
+@Parcelize
+enum class Level : Parcelable {
     TEST, EASY, NORMAL, HARD
 }
