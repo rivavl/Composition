@@ -4,9 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
+import androidx.navigation.fragment.findNavController
 import com.marina.composition.R
 import com.marina.composition.databinding.FragmentGameFinishedBinding
 import com.marina.composition.domain.entity.GameResult
@@ -34,10 +33,8 @@ class GameFinishedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onBackPressed()
-        binding.buttonRetry.setOnClickListener {
-            retryGame()
-        }
+        setupClickListeners()
+
         bindViews()
     }
 
@@ -46,18 +43,10 @@ class GameFinishedFragment : Fragment() {
         _binding = null
     }
 
-    private fun onBackPressed() {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                retryGame()
-            }
-
+    private fun setupClickListeners() {
+        binding.buttonRetry.setOnClickListener {
+            retryGame()
         }
-        //клик на кнопку назад
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            callback
-        )
     }
 
     private fun parseArgs() {
@@ -67,10 +56,7 @@ class GameFinishedFragment : Fragment() {
     }
 
     private fun retryGame() {
-        requireActivity().supportFragmentManager.popBackStack(
-            GameFragment.NAME,
-            FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
+        findNavController().popBackStack()
     }
 
     private fun bindViews() {
@@ -113,7 +99,7 @@ class GameFinishedFragment : Fragment() {
 
     companion object {
 
-        private const val KEY_GAME_RESULT = "game_result"
+        const val KEY_GAME_RESULT = "game_result"
 
         fun newInstance(gameResult: GameResult): GameFinishedFragment {
             return GameFinishedFragment().apply {
